@@ -67,7 +67,7 @@ function App() {
           tempBoard[dropRow][colIndex] = color;
           if (dropRow > 0) tempBoard[dropRow - 1][colIndex] = null;
           setBoard(tempBoard);
-          await new Promise(resolve => setTimeout(resolve, 100)); // Delay for animation
+          await new Promise(resolve => setTimeout(resolve, 45)); // Delay for animation
         }
 
         newBoard[row][colIndex] = color;
