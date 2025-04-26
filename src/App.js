@@ -6,6 +6,7 @@ function App() {
   const [board, setBoard] = useState(createBoard);
   const [turn, setTurn] = useState(true); // true = red, false = yellow
   const [winner, setWinner] = useState(null);
+  const [isDropping, setIsDropping] = useState(false); // New state to track if a piece is dropping
 
   function checkWinner(board, row, col, color) {
     const directions = [
@@ -53,8 +54,9 @@ function App() {
   }
 
   async function handleColClick(colIndex) {
-    if (winner) return;
+    if (winner || isDropping) return; // Prevent moves during dropping animation
 
+    setIsDropping(true); // Set dropping state to true
     const newBoard = board.map(row => [...row]);
 
     for (let row = board.length - 1; row >= 0; row--) {
@@ -82,6 +84,8 @@ function App() {
         break;
       }
     }
+
+    setIsDropping(false); // Reset dropping state after animation
   }
 
   function handleKeyDown(event) {
