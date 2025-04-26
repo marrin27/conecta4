@@ -29,6 +29,20 @@ h1 {
   border-radius: 50%;
   background-color: white; /* Empty slot */
 }
+.title {
+  display: flex;
+  flex-direction: row;
+}
+.title .input[type="button"] {
+  margin: 0 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #282c34;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 .connect4-board .cell.red::after {
   background-color: red; /* Player 1's color */
 }
