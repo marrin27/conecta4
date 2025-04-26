@@ -1,3 +1,6 @@
+import './App.css';
+import React, { useState } from 'react';
+
 function App() {
   const createBoard = () => Array.from({ length: 6 }, () => Array(7).fill(null));
   const [board, setBoard] = useState(createBoard);
