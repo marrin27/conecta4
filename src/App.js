@@ -107,24 +107,26 @@ function App() {
     >
   <div className="title">
   {winner ? (
-    <h1 style={{ color: turn ? 'red' : 'yellow' }}>
-      ¡Ganó el jugador {turn ? "ROJO" : "AMARILLO"}!
-    </h1>
+    <>
+      <h1 style={{ color: turn ? 'red' : 'yellow' }}>
+        ¡Ganó el jugador {turn ? "ROJO" : "AMARILLO"}!
+      </h1>
+      <input
+        type="button"
+        value="Reiniciar"
+        onClick={() => {
+          setBoard(createBoard());
+          setTurn(true);
+          setWinner(null);
+        }}
+        className="restart-button"
+      />
+    </>
   ) : (
     <h1 style={{ color: turn ? 'red' : 'yellow' }}>
       Es el turno del jugador {turn ? "ROJO" : "AMARILLO"}
     </h1>
   )}
-  <input
-    type="button"
-    value="Reiniciar"
-    onClick={() => {
-      setBoard(createBoard());
-      setTurn(true);
-      setWinner(null);
-    }}
-    className="restart-button"
-  />
 </div>
       <table className="connect4-board">
         <tbody>
