@@ -39,8 +39,8 @@ h1 {
 }
 
 .connect4-board .cell.red.winner::after {
-   box-shadow: #bcd134 0 0 0 10px; /* Highlight winner */
+   box-shadow: #bcd134 0 0 5px 10px; /* Highlight winner */
 }
 .connect4-board .cell.yellow.winner::after {
-  box-shadow: #bcd134 0 0 0 10px; 
+  box-shadow: #bcd134 0 0 5px 10px; 
 }
