@@ -31,6 +31,7 @@ h1 {
 }
 
 .title {
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -53,9 +54,25 @@ h1 {
   border-radius: 5px;
   transition: background-color 0.3s;
 }
+.invisible-buttons {
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1px; /* Space between buttons and board */
+}
 
-.restart-button:hover {
-  background-color: #0056b3;
+.invisible-button {
+  
+  width: 100px; /* Match the column width */
+  height: 50px; /* Height of the button */
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.invisible-button:hover {
+  background-color: rgba(0, 0, 0, 0.1); /* Highlight column on hover */
 }
 
 .connect4-board .cell.red::after {

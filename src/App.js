@@ -141,11 +141,21 @@ function App() {
     </h1>
   )}
 </div>
-      <table className="connect4-board">
-        <tbody>
-          {generateBoard()}
-        </tbody>
-      </table>
+<div className="invisible-buttons">
+  {[...Array(7)].map((_, colIndex) => (
+    <input
+      key={colIndex}
+      type="button"
+      onClick={() => handleColClick(colIndex)}
+      className="invisible-button"
+    />
+  ))}
+</div>
+<table className="connect4-board">
+  <tbody>
+    {generateBoard()}
+  </tbody>
+</table>
     </div>
   );
 }
