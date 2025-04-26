@@ -1,23 +1,111 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useState } from 'react';
 
 function App() {
-  return (
-    <div className="App">
-    <h1>Connect 4</h1>
-    <table className="connect4-board">
-      <tbody>
-        {Array.from({ length: 6 }).map((_, rowIndex) => (
-          <tr key={rowIndex}>
-            {Array.from({ length: 7 }).map((_, colIndex) => (
-              <td key={colIndex} className="cell"></td>
-            ))}
-          </tr>
+  const createBoard = () => Array.from({ length: 6 }, () => Array(7).fill(null));
+  const [board, setBoard] = useState(createBoard);
+  const [turn, setTurn] = useState(true); // true = red, false = yellow
+  const [winner, setWinner] = useState(null);
+
+  function checkWinner(board, row, col, color) {
+    const directions = [
+      [1, 0],  // vertical
+      [0, 1],  // horizontal
+      [1, 1],  // diagonal ↘
+      [1, -1], // diagonal ↙
+    ];
+
+    for (let [dx, dy] of directions) {
+      let count = 1;
+
+      let r = row - dx;
+      let c = col - dy;
+      while (r >= 0 && r < 6 && c >= 0 && c < 7 && board[r][c] === color) {
+        count++;
+        r -= dx;
+        c -= dy;
+      }
+
+      r = row + dx;
+      c = col + dy;
+      while (r >= 0 && r < 6 && c >= 0 && c < 7 && board[r][c] === color) {
+        count++;
+        r += dx;
+        c += dy;
+      }
+
+      if (count >= 4) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function handleColClick(colIndex) {
+    if (winner) return;
+
+    const newBoard = board.map(row => [...row]);
+
+    for (let row = board.length - 1; row >= 0; row--) {
+      if (newBoard[row][colIndex] === null) {
+        const color = turn ? 'red' : 'yellow';
+        newBoard[row][colIndex] = color;
+
+        setBoard(newBoard);
+
+        if (checkWinner(newBoard, row, colIndex, color)) {
+          setWinner(color);
+        } else {
+          setTurn(!turn);
+        }
+
+        break;
+      }
+    }
+  }
+
+  function handleKeyDown(event) {
+    if (winner) return;
+
+    const key = event.key;
+    if (['1', '2', '3', '4', '5', '6', '7'].includes(key)) {
+      const colIndex = parseInt(key) - 1;
+      handleColClick(colIndex);
+    }
+  }
+
+  function generateBoard() {
+    return board.map((row, rowIndex) => (
+      <tr key={rowIndex}>
+        {row.map((cell, colIndex) => (
+          <td
+            key={colIndex}
+            className={`cell ${cell || ''}`}
+            onClick={() => handleColClick(colIndex)}
+          ></td>
         ))}
-      </tbody>
-    </table>
-  </div>
-    
+      </tr>
+    ));
+  }
+
+  return (
+    <div
+      className="App"
+      tabIndex={0} // Make the div focusable to capture keydown events
+      onKeyDown={handleKeyDown} // Attach the keydown event handler
+    >
+      {winner ? (
+        <h1>¡Ganó el jugador {winner.toUpperCase()}!</h1>
+      ) : (
+        <h1>Es el turno del jugador {turn ? "ROJO" : "AMARILLO"}</h1>
+      )}
+      <table className="connect4-board">
+        <tbody>
+          {generateBoard()}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
