@@ -29,6 +29,7 @@ h1 {
   border-radius: 50%;
   background-color: white; /* Empty slot */
 }
+
 .title {
   display: flex;
   align-items: center;
@@ -56,6 +57,7 @@ h1 {
 .restart-button:hover {
   background-color: #0056b3;
 }
+
 .connect4-board .cell.red::after {
   background-color: red; /* Player 1's color */
 }
@@ -65,8 +67,24 @@ h1 {
 }
 
 .connect4-board .cell.red.winner::after {
-   box-shadow: #f2a007 0 0 20px 20px; /* Highlight winner */
+  box-shadow: #f2a007 0 0 20px 20px; /* Highlight winner */
 }
+
 .connect4-board .cell.yellow.winner::after {
   box-shadow: #f2a007 0 0 20px 20px; 
+}
+
+/* New animation for dropping effect */
+@keyframes drop {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.connect4-board .cell.red::after,
+.connect4-board .cell.yellow::after {
+  animation: drop 0.3s ease-out; /* Apply the drop animation */
 }
