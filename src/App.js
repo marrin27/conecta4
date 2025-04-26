@@ -14,9 +14,10 @@ function App() {
       [1, 1],  // diagonal ↘
       [1, -1], // diagonal ↙
     ];
-    const cellCount=[]
 
     for (let [dx, dy] of directions) {
+      const cellCount=[]
+
       let count = 1;
       cellCount.push([row, col])
       let r = row - dx;
