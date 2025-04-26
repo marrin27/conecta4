@@ -15,6 +15,7 @@ h1 {
 .connect4-board td {
   width: 100px;
   height: 100px;
+  cursor: pointer;
   border: 2px solid #000;
   background-color: #87CEEB; /* Light blue for the board */
   position: relative;
@@ -36,7 +37,6 @@ h1 {
   align-items: center;
   justify-content: center;
   gap: 20px; /* Space between the title and button */
-  margin-bottom: 50px;
 }
 
 .title h1 {
@@ -60,13 +60,13 @@ h1 {
   justify-content: center;
   margin-bottom: 1px; /* Space between buttons and board */
   position: relative; /* Ensure alignment with the board */
-  background-color: white; /* Transparent background */
   left: 0px; /* Adjust alignment to match the board columns */
 }
 
 .invisible-button {
   width: 104px; /* Match the column width */
   height: 50px; /* Height of the button */
+  background-color: transparent; /* Transparent background */
   border: none;
   cursor: pointer;
   position: relative;
