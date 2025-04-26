@@ -49,7 +49,7 @@ function App() {
 
     for (let row = board.length - 1; row >= 0; row--) {
       if (newBoard[row][colIndex] === null) {
-        const color = turn ? 'red' : 'yellow';
+        const color = turn ? 'ROJO' : 'AMARILLO';
         newBoard[row][colIndex] = color;
 
         setBoard(newBoard);
