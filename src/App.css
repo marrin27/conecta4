@@ -29,7 +29,6 @@ h1 {
   border-radius: 50%;
   background-color: white; /* Empty slot */
 }
-
 .connect4-board .cell.red::after {
   background-color: red; /* Player 1's color */
 }

@@ -105,12 +105,19 @@ function App() {
       tabIndex={0} // Make the div focusable to capture keydown events
       onKeyDown={handleKeyDown} // Attach the keydown event handler
     >
+      <div className="title">
       {winner ? (
         <h1>¡Ganó el jugador {turn ? "ROJO" : "AMARILLO"}!</h1>
 
       ) : (
         <h1>Es el turno del jugador {turn ? "ROJO" : "AMARILLO"}</h1>
       )}
+      <input type="button" value="Reiniciar" onClick={() => {
+        setBoard(createBoard());
+        setTurn(true);
+        setWinner(null);
+      }} />   
+      </div>
       <table className="connect4-board">
         <tbody>
           {generateBoard()}
