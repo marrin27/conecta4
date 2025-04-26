@@ -111,6 +111,7 @@ function App() {
   ) : (
     <h1>Es el turno del jugador {turn ? "ROJO" : "AMARILLO"}</h1>
   )}
+  { winner ? (
   <input
     type="button"
     value="Reiniciar"
@@ -120,7 +121,7 @@ function App() {
       setWinner(null);
     }}
     className="restart-button"
-  />
+  />):""}
 </div>
       <table className="connect4-board">
         <tbody>
