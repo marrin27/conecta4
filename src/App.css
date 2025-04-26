@@ -34,7 +34,7 @@ h1 {
   align-items: center;
   justify-content: center;
   gap: 20px; /* Space between the title and button */
-  margin-bottom: 3px;
+  margin-bottom: 50px;
 }
 
 .title h1 {
