@@ -59,20 +59,24 @@ h1 {
   display: flex;
   justify-content: center;
   margin-bottom: 1px; /* Space between buttons and board */
+  position: relative; /* Ensure alignment with the board */
+  background-color: white; /* Transparent background */
+  left: 0px; /* Adjust alignment to match the board columns */
 }
 
 .invisible-button {
-  
-  width: 100px; /* Match the column width */
+  width: 104px; /* Match the column width */
   height: 50px; /* Height of the button */
-  background-color: transparent;
   border: none;
   cursor: pointer;
   position: relative;
+  outline: none; /* Remove focus outline */
 }
 
-.invisible-button:hover {
-  background-color: rgba(0, 0, 0, 0.1); /* Highlight column on hover */
+.invisible-button:hover,
+.invisible-button:active,
+.invisible-button:focus {
+  background-color: transparent; /* No hover or click effect */
 }
 
 .connect4-board .cell.red::after {
