@@ -14,6 +14,7 @@ function App() {
       [1, 1],  // diagonal ↘
       [1, -1], // diagonal ↙
     ];
+    const cellCount=[]
 
     for (let [dx, dy] of directions) {
       let count = 1;
@@ -24,6 +25,7 @@ function App() {
         count++;
         r -= dx;
         c -= dy;
+        cellCount.push([r, c])
       }
 
       r = row + dx;
@@ -32,9 +34,16 @@ function App() {
         count++;
         r += dx;
         c += dy;
+        cellCount.push([r, c])
+
       }
 
       if (count >= 4) {
+        cellCount.map((cell) => {
+          const [r, c] = cell;
+          board[r][c] = color + ' winner';
+        }
+        )
         return true;
       }
     }
@@ -97,6 +106,7 @@ function App() {
     >
       {winner ? (
         <h1>¡Ganó el jugador {winner.toUpperCase()}!</h1>
+
       ) : (
         <h1>Es el turno del jugador {turn ? "ROJO" : "AMARILLO"}</h1>
       )}

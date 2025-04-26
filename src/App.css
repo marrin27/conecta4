@@ -33,6 +33,14 @@ h1 {
 .connect4-board .cell.red::after {
   background-color: red; /* Player 1's color */
 }
+
 .connect4-board .cell.yellow::after {
   background-color: yellow; /* Player 2's color */
+}
+
+.connect4-board .cell.red.winner::after {
+   box-shadow: red 0 0 0 10px; /* Highlight winner */
+}
+.connect4-board .cell.yellow.winner::after {
+  box-decoration-break: yellow 0 0 0 10px; 
 }
