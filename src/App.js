@@ -105,7 +105,7 @@ function App() {
       onKeyDown={handleKeyDown} // Attach the keydown event handler
     >
       {winner ? (
-        <h1>¡Ganó el jugador {winner.toUpperCase()}!</h1>
+        <h1>¡Ganó el jugador {turn ? "ROJO" : "AMARILLO"}!</h1>
 
       ) : (
         <h1>Es el turno del jugador {turn ? "ROJO" : "AMARILLO"}</h1>
