@@ -18,7 +18,7 @@ function App() {
 
     for (let [dx, dy] of directions) {
       let count = 1;
-
+      cellCount.push([row, col])
       let r = row - dx;
       let c = col - dy;
       while (r >= 0 && r < 6 && c >= 0 && c < 7 && board[r][c] === color) {
