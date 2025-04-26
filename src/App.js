@@ -52,7 +52,7 @@ function App() {
     return false;
   }
 
-  function handleColClick(colIndex) {
+  async function handleColClick(colIndex) {
     if (winner) return;
 
     const newBoard = board.map(row => [...row]);
@@ -60,8 +60,17 @@ function App() {
     for (let row = board.length - 1; row >= 0; row--) {
       if (newBoard[row][colIndex] === null) {
         const color = turn ? 'red' : 'yellow';
-        newBoard[row][colIndex] = color;
 
+        // Simulate the dropping animation
+        for (let dropRow = 0; dropRow <= row; dropRow++) {
+          const tempBoard = newBoard.map(r => [...r]);
+          tempBoard[dropRow][colIndex] = color;
+          if (dropRow > 0) tempBoard[dropRow - 1][colIndex] = null;
+          setBoard(tempBoard);
+          await new Promise(resolve => setTimeout(resolve, 50)); // Delay for animation
+        }
+
+        newBoard[row][colIndex] = color;
         setBoard(newBoard);
 
         if (checkWinner(newBoard, row, colIndex, color)) {
