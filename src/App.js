@@ -22,19 +22,19 @@ function App() {
       let r = row - dx;
       let c = col - dy;
       while (r >= 0 && r < 6 && c >= 0 && c < 7 && board[r][c] === color) {
+        cellCount.push([r, c])
         count++;
         r -= dx;
         c -= dy;
-        cellCount.push([r, c])
       }
 
       r = row + dx;
       c = col + dy;
       while (r >= 0 && r < 6 && c >= 0 && c < 7 && board[r][c] === color) {
+        cellCount.push([r, c])
         count++;
         r += dx;
         c += dy;
-        cellCount.push([r, c])
 
       }
 

@@ -42,5 +42,5 @@ h1 {
    box-shadow: red 0 0 0 10px; /* Highlight winner */
 }
 .connect4-board .cell.yellow.winner::after {
-  box-decoration-break: yellow 0 0 0 10px; 
+  box-shadow: yellow 0 0 0 10px; 
 }
