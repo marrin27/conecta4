@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 
 function App() {
   const createBoard = () => Array.from({ length: 6 }, () => Array(7).fill(null));
@@ -8,7 +8,7 @@ function App() {
   const [winner, setWinner] = useState(null);
   const [isDropping, setIsDropping] = useState(false);
 
-  function checkWinner(board, row, col, color) {
+  const checkWinner = useCallback((board, row, col, color) => {
     const directions = [
       [1, 0],  // vertical
       [0, 1],  // horizontal
@@ -31,30 +31,19 @@ function App() {
     }
 
     return false;
-  }
+  }, []);
 
-  function countCells(board, row, col, dx, dy, color, cellCount) {
-    let count = 0;
-    let r = row + dx;
-    let c = col + dy;
-
-    while (r >= 0 && r < 6 && c >= 0 && c < 7 && board[r][c] === color) {
-      cellCount.push([r, c]);
-      count++;
-      r += dx;
-      c += dy;
+  const simulateDrop = useCallback(async (board, colIndex, targetRow, color) => {
+    for (let dropRow = 0; dropRow <= targetRow; dropRow++) {
+      const tempBoard = board.map(r => [...r]);
+      tempBoard[dropRow][colIndex] = color;
+      if (dropRow > 0) tempBoard[dropRow - 1][colIndex] = null;
+      setBoard(tempBoard);
+      await new Promise(resolve => setTimeout(resolve, 45));
     }
+  }, [setBoard]);
 
-    return count;
-  }
-
-  function highlightWinningCells(board, cellCount, color) {
-    cellCount.forEach(([r, c]) => {
-      board[r][c] = `${color} winner`;
-    });
-  }
-
-  async function handleColClick(colIndex) {
+  const handleColClick = useCallback(async (colIndex) => {
     if (winner || isDropping) return;
 
     setIsDropping(true);
@@ -79,16 +68,27 @@ function App() {
     }
 
     setIsDropping(false);
+  }, [board, winner, isDropping, turn, simulateDrop, checkWinner]);
+
+  function countCells(board, row, col, dx, dy, color, cellCount) {
+    let count = 0;
+    let r = row + dx;
+    let c = col + dy;
+
+    while (r >= 0 && r < 6 && c >= 0 && c < 7 && board[r][c] === color) {
+      cellCount.push([r, c]);
+      count++;
+      r += dx;
+      c += dy;
+    }
+
+    return count;
   }
 
-  async function simulateDrop(board, colIndex, targetRow, color) {
-    for (let dropRow = 0; dropRow <= targetRow; dropRow++) {
-      const tempBoard = board.map(r => [...r]);
-      tempBoard[dropRow][colIndex] = color;
-      if (dropRow > 0) tempBoard[dropRow - 1][colIndex] = null;
-      setBoard(tempBoard);
-      await new Promise(resolve => setTimeout(resolve, 45));
-    }
+  function highlightWinningCells(board, cellCount, color) {
+    cellCount.forEach(([r, c]) => {
+      board[r][c] = `${color} winner`;
+    });
   }
 
   function generateBoard() {
@@ -106,7 +106,7 @@ function App() {
   }
 
   function handleKeyDown(event) {
-    if (winner || isDropping) return; // Prevent moves during dropping animation or after a win
+    if (winner || isDropping) return;
 
     const key = event.key;
     if (['1', '2', '3', '4', '5', '6', '7'].includes(key)) {
@@ -143,16 +143,6 @@ function App() {
             Es el turno del jugador {turn ? "ROJO" : "AMARILLO"}
           </h1>
         )}
-      </div>
-      <div className="invisible-buttons">
-        {[...Array(7)].map((_, colIndex) => (
-          <input
-            key={colIndex}
-            type="button"
-            onClick={() => handleColClick(colIndex)}
-            className="invisible-button"
-          />
-        ))}
       </div>
       <table className="connect4-board">
         <tbody>
