@@ -109,3 +109,11 @@ h1 {
 .connect4-board .cell.yellow::after {
   animation: drop 0.045s ease-out; /* Apply the drop animation */
 }
+
+.connect4-board td.highlight-column {
+  background-color: rgba(200, 200, 200, 0.3); /* Light gray for the column */
+}
+
+.connect4-board td.highlight-drop {
+  background-color: rgba(100, 100, 100, 0.5); /* Darker gray for the drop cell */
+}

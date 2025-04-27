@@ -6,7 +6,7 @@ function App() {
   const [board, setBoard] = useState(createBoard);
   const [turn, setTurn] = useState(true); // true = red, false = yellow
   const [winner, setWinner] = useState(null);
-  const [isDropping, setIsDropping] = useState(false); // New state to track if a piece is dropping
+  const [isDropping, setIsDropping] = useState(false);
 
   function checkWinner(board, row, col, color) {
     const directions = [
@@ -17,35 +17,15 @@ function App() {
     ];
 
     for (let [dx, dy] of directions) {
-      const cellCount=[]
-
+      const cellCount = [];
       let count = 1;
-      cellCount.push([row, col])
-      let r = row - dx;
-      let c = col - dy;
-      while (r >= 0 && r < 6 && c >= 0 && c < 7 && board[r][c] === color) {
-        cellCount.push([r, c])
-        count++;
-        r -= dx;
-        c -= dy;
-      }
+      cellCount.push([row, col]);
 
-      r = row + dx;
-      c = col + dy;
-      while (r >= 0 && r < 6 && c >= 0 && c < 7 && board[r][c] === color) {
-        cellCount.push([r, c])
-        count++;
-        r += dx;
-        c += dy;
-
-      }
+      count += countCells(board, row, col, dx, dy, color, cellCount);
+      count += countCells(board, row, col, -dx, -dy, color, cellCount);
 
       if (count >= 4) {
-        cellCount.map((cell) => {
-          const [r, c] = cell;
-          board[r][c] = color + ' winner';
-        }
-        )
+        highlightWinningCells(board, cellCount, color);
         return true;
       }
     }
@@ -53,25 +33,38 @@ function App() {
     return false;
   }
 
-  async function handleColClick(colIndex) {
-    if (winner || isDropping) return; // Prevent moves during dropping animation
+  function countCells(board, row, col, dx, dy, color, cellCount) {
+    let count = 0;
+    let r = row + dx;
+    let c = col + dy;
 
-    setIsDropping(true); // Set dropping state to true
+    while (r >= 0 && r < 6 && c >= 0 && c < 7 && board[r][c] === color) {
+      cellCount.push([r, c]);
+      count++;
+      r += dx;
+      c += dy;
+    }
+
+    return count;
+  }
+
+  function highlightWinningCells(board, cellCount, color) {
+    cellCount.forEach(([r, c]) => {
+      board[r][c] = `${color} winner`;
+    });
+  }
+
+  async function handleColClick(colIndex) {
+    if (winner || isDropping) return;
+
+    setIsDropping(true);
     const newBoard = board.map(row => [...row]);
 
     for (let row = board.length - 1; row >= 0; row--) {
       if (newBoard[row][colIndex] === null) {
         const color = turn ? 'red' : 'yellow';
 
-        // Simulate the dropping animation
-        for (let dropRow = 0; dropRow <= row; dropRow++) {
-          const tempBoard = newBoard.map(r => [...r]);
-          tempBoard[dropRow][colIndex] = color;
-          if (dropRow > 0) tempBoard[dropRow - 1][colIndex] = null;
-          setBoard(tempBoard);
-          await new Promise(resolve => setTimeout(resolve, 45)); // Delay for animation
-        }
-
+        await simulateDrop(newBoard, colIndex, row, color);
         newBoard[row][colIndex] = color;
         setBoard(newBoard);
 
@@ -85,16 +78,16 @@ function App() {
       }
     }
 
-    setIsDropping(false); // Reset dropping state after animation
+    setIsDropping(false);
   }
 
-  function handleKeyDown(event) {
-    if (winner) return;
-
-    const key = event.key;
-    if (['1', '2', '3', '4', '5', '6', '7'].includes(key)) {
-      const colIndex = parseInt(key) - 1;
-      handleColClick(colIndex);
+  async function simulateDrop(board, colIndex, targetRow, color) {
+    for (let dropRow = 0; dropRow <= targetRow; dropRow++) {
+      const tempBoard = board.map(r => [...r]);
+      tempBoard[dropRow][colIndex] = color;
+      if (dropRow > 0) tempBoard[dropRow - 1][colIndex] = null;
+      setBoard(tempBoard);
+      await new Promise(resolve => setTimeout(resolve, 45));
     }
   }
 
@@ -112,50 +105,60 @@ function App() {
     ));
   }
 
+  function handleKeyDown(event) {
+    if (winner || isDropping) return; // Prevent moves during dropping animation or after a win
+
+    const key = event.key;
+    if (['1', '2', '3', '4', '5', '6', '7'].includes(key)) {
+      const colIndex = parseInt(key) - 1;
+      handleColClick(colIndex);
+    }
+  }
+
   return (
     <div
       className="App"
-      tabIndex={0} // Make the div focusable to capture keydown events
-      onKeyDown={handleKeyDown} // Attach the keydown event handler
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
     >
-  <div className="title">
-  {winner ? (
-    <>
-      <h1 style={{ color: turn ? 'red' : 'yellow' }}>
-        ¡Ganó el jugador {turn ? "ROJO" : "AMARILLO"}!
-      </h1>
-      <input
-        type="button"
-        value="Reiniciar"
-        onClick={() => {
-          setBoard(createBoard());
-          setTurn(true);
-          setWinner(null);
-        }}
-        className="restart-button"
-      />
-    </>
-  ) : (
-    <h1 style={{ color: turn ? 'red' : 'yellow' }}>
-      Es el turno del jugador {turn ? "ROJO" : "AMARILLO"}
-    </h1>
-  )}
-</div>
-<div className="invisible-buttons">
-  {[...Array(7)].map((_, colIndex) => (
-    <input
-      key={colIndex}
-      type="button"
-      onClick={() => handleColClick(colIndex)}
-      className="invisible-button"
-    />
-  ))}
-</div>
-<table className="connect4-board">
-  <tbody>
-    {generateBoard()}
-  </tbody>
-</table>
+      <div className="title">
+        {winner ? (
+          <>
+            <h1 style={{ color: turn ? 'red' : 'yellow' }}>
+              ¡Ganó el jugador {turn ? "ROJO" : "AMARILLO"}!
+            </h1>
+            <input
+              type="button"
+              value="Reiniciar"
+              onClick={() => {
+                setBoard(createBoard());
+                setTurn(true);
+                setWinner(null);
+              }}
+              className="restart-button"
+            />
+          </>
+        ) : (
+          <h1 style={{ color: turn ? 'red' : 'yellow' }}>
+            Es el turno del jugador {turn ? "ROJO" : "AMARILLO"}
+          </h1>
+        )}
+      </div>
+      <div className="invisible-buttons">
+        {[...Array(7)].map((_, colIndex) => (
+          <input
+            key={colIndex}
+            type="button"
+            onClick={() => handleColClick(colIndex)}
+            className="invisible-button"
+          />
+        ))}
+      </div>
+      <table className="connect4-board">
+        <tbody>
+          {generateBoard()}
+        </tbody>
+      </table>
     </div>
   );
 }
