@@ -177,6 +177,13 @@ function App() {
       tabIndex={0}
       onKeyDown={handleKeyDown}
     >
+      
+      {generateInvisibleButtons()}
+      <table className="connect4-board">
+        <tbody>
+          {generateBoard()}
+        </tbody>
+      </table>
       <div className="title">
         {winner ? (
           <>
@@ -200,12 +207,6 @@ function App() {
           </h1>
         )}
       </div>
-      {generateInvisibleButtons()}
-      <table className="connect4-board">
-        <tbody>
-          {generateBoard()}
-        </tbody>
-      </table>
     </div>
   );
 }
