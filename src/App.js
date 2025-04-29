@@ -7,6 +7,7 @@ function App() {
   const [turn, setTurn] = useState(true); // true = red, false = yellow
   const [winner, setWinner] = useState(null);
   const [isDropping, setIsDropping] = useState(false);
+  const [hoverCol, setHoverCol] = useState(null); // Columna actual bajo el puntero
 
   const checkWinner = useCallback((board, row, col, color) => {
     const directions = [
@@ -44,7 +45,7 @@ function App() {
   }, [setBoard]);
 
   const handleColClick = useCallback(async (colIndex) => {
-    if (winner || isDropping) return;
+    if (isDropping) return;
 
     setIsDropping(true);
     const newBoard = board.map(row => [...row]);
@@ -91,16 +92,55 @@ function App() {
     });
   }
 
+  // Devuelve la fila en la que caería la ficha en la columna indicada
+  function getDropRow(colIndex) {
+    for (let row = board.length - 1; row >= 0; row--) {
+      if (board[row][colIndex] === null) {
+        return row;
+      }
+    }
+    return null;
+  }
+
+  // Genera el contenido del tablero
   function generateBoard() {
+    // If a winner is found, return the board as it is without hover or drop effects
+    if (winner) {
+      return board.map((row, rowIndex) => (
+        <tr key={rowIndex}>
+          {row.map((cell, colIndex) => (
+            <td
+              key={colIndex}
+              className={`cell ${cell || ''}`}
+            ></td>
+          ))}
+        </tr>
+      ));
+    }
+  
+    // Otherwise, continue with hover and drop effects
+    const dropRowByCol = hoverCol !== null ? getDropRow(hoverCol) : null;
+  
     return board.map((row, rowIndex) => (
       <tr key={rowIndex}>
-        {row.map((cell, colIndex) => (
-          <td
-            key={colIndex}
-            className={`cell ${cell || ''}`}
-            onClick={() => handleColClick(colIndex)}
-          ></td>
-        ))}
+        {row.map((cell, colIndex) => {
+          const isHoverCol = hoverCol === colIndex;
+          const isDropCell = isHoverCol && rowIndex === dropRowByCol;
+  
+          const cellColorClass = cell || '';
+          const hoverClass = isHoverCol ? 'highlight-column' : '';
+          const dropClass = isDropCell ? `highlight-drop ghost-${turn ? 'red' : 'yellow'}` : '';
+  
+          return (
+            <td
+              key={colIndex}
+              className={`cell ${cellColorClass} ${hoverClass} ${dropClass}`}
+              onClick={() => handleColClick(colIndex)}
+              onMouseEnter={() => setHoverCol(colIndex) }
+              onMouseLeave={() => setHoverCol(null)}
+            ></td>
+          );
+        })}
       </tr>
     ));
   }
@@ -123,6 +163,8 @@ function App() {
             key={colIndex}
             className="invisible-button"
             onClick={() => handleColClick(colIndex)}
+            onMouseEnter={() => setHoverCol(colIndex)}
+            onMouseLeave={() => setHoverCol(null)}
           ></button>
         ))}
       </div>

@@ -110,10 +110,18 @@ h1 {
   animation: drop 0.045s ease-out; /* Apply the drop animation */
 }
 
-.connect4-board td.highlight-column:hover {
-  background-color: rgba(135, 206, 235, 0.5); /* Grayer light blue for the column */
+.connect4-board .cell.ghost-red::after {
+  background-color: rgba(255, 0, 0, 0.4); /* Ficha roja semitransparente */
+}
+
+.connect4-board .cell.ghost-yellow::after {
+  background-color: rgba(255, 255, 0, 0.4); /* Ficha amarilla semitransparente */
+}
+
+.connect4-board td.highlight-column {
+  background-color: rgba(135, 206, 235, 0.5);
 }
 
 .connect4-board td.highlight-drop {
-  background-color: rgba(135, 206, 235, 0.8); /* Darker grayer light blue for the drop cell */
+  background-color: rgba(135, 206, 235, 0.8);
 }
