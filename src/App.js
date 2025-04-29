@@ -115,6 +115,20 @@ function App() {
     }
   }
 
+  function generateInvisibleButtons() {
+    return (
+      <div className="invisible-buttons">
+        {[...Array(7)].map((_, colIndex) => (
+          <button
+            key={colIndex}
+            className="invisible-button"
+            onClick={() => handleColClick(colIndex)}
+          ></button>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div
       className="App"
@@ -144,6 +158,7 @@ function App() {
           </h1>
         )}
       </div>
+      {generateInvisibleButtons()}
       <table className="connect4-board">
         <tbody>
           {generateBoard()}
