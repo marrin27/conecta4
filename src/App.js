@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback} from 'react';
 
 function App() {
   const createBoard = () => Array.from({ length: 6 }, () => Array(7).fill(null));
@@ -9,6 +9,8 @@ function App() {
   const [isDropping, setIsDropping] = useState(false);
   const [hoverCol, setHoverCol] = useState(null); // Columna actual bajo el puntero
 
+
+  
   const checkWinner = useCallback((board, row, col, color) => {
     const directions = [
       [1, 0],  // vertical
@@ -177,7 +179,6 @@ function App() {
       tabIndex={0}
       onKeyDown={handleKeyDown}
     >
-      
       {generateInvisibleButtons()}
       <table className="connect4-board">
         <tbody>
