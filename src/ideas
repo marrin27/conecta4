@@ -1,12 +1,12 @@
 1. Add a Scoreboard
-    Track the number of wins for each player.
-    Display the scoreboard at the top or side of the game.
-    Persist the scores using Local Storage or a backend server.
+Track the number of wins for each player.
+Display the scoreboard at the top or side of the game.
+Persist the scores using Local Storage or a backend server.
 ----------------------------------------------------------------
     
 2. Add a Timer
-    Add a countdown timer for each player's turn.
-    If the timer runs out, automatically skip the turn or declare the other player as the winner.
+Add a countdown timer for each player's turn.
+If the timer runs out, automatically skip the turn or declare the other player as the winner.
 ----------------------------------------------------------------
 
 3. Multiplayer Mode
