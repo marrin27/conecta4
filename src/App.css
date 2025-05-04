@@ -182,13 +182,6 @@ h1 {
   gap: 10px;
 }
 
-.player .player-timer {
-  font-size: 1.2rem; /* Adjust timer font size */
-}
-
-.player .player-wins {
-  font-size: 1.2rem; /* Adjust wins font size */
-}
 
 .player-info::after {
   content: none; /* Remove the vertical separator */
