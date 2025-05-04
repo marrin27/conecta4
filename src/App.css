@@ -129,12 +129,12 @@ h1 {
 .game-container {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center; /* Align items to the center */
   gap: 20px;
 }
 
 .board-container {
-  flex: 1;
+  flex: 0 0 auto; /* Prevent the board from stretching */
 }
 
 .control-panel {
@@ -142,6 +142,7 @@ h1 {
   flex-direction: column;
   gap: 20px;
   width: 200px;
+  align-items: center; /* Center align the control panel content */
 }
 
 .player-info {
