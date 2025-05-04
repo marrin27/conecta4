@@ -208,3 +208,9 @@ h1 {
 .game-controls button:hover {
   background-color: #0056b3;
 }
+
+.game-controls button:disabled {
+  background-color: rgba(135, 206, 235, 0.5); /* Transparent blue with gray tone */
+  cursor: not-allowed; /* Change cursor to indicate disabled state */
+  color: #d3d3d3; /* Light gray text for readability */
+}

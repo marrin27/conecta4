@@ -262,11 +262,11 @@ function App() {
             </div>
           </div>
           <div className="game-controls">
-            <button onClick={() => navigateMoves('first')} title="First Move">⏮️</button>
-            <button onClick={() => navigateMoves('prev')} title="Previous Move">◀️</button>
-            <button onClick={() => navigateMoves('next')} title="Next Move">▶️</button>
-            <button onClick={() => navigateMoves('last')} title="Last Move">⏭️</button>
-            <button onClick={replayLastMove} title="Replay Last Move">🔄</button>
+            <button onClick={() => navigateMoves('first')} title="First Move" disabled={!winner}>⏮️</button>
+            <button onClick={() => navigateMoves('prev')} title="Previous Move" disabled={!winner}>◀️</button>
+            <button onClick={() => navigateMoves('next')} title="Next Move" disabled={!winner}>▶️</button>
+            <button onClick={() => navigateMoves('last')} title="Last Move" disabled={!winner}>⏭️</button>
+            <button onClick={replayLastMove} title="Replay Last Move" >🔄</button>
             <button onClick={startNewGame} title="New Game">🆕</button>
           </div>
         </div>
