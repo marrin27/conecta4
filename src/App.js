@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState, useCallback} from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 function App() {
   const createBoard = () => Array.from({ length: 6 }, () => Array(7).fill(null));
@@ -7,10 +7,31 @@ function App() {
   const [turn, setTurn] = useState(true); // true = red, false = yellow
   const [winner, setWinner] = useState(null);
   const [isDropping, setIsDropping] = useState(false);
-  const [hoverCol, setHoverCol] = useState(null); // Columna actual bajo el puntero
+  const [hoverCol, setHoverCol] = useState(null); // Column under the pointer
+  const [redWins, setRedWins] = useState(0);
+  const [yellowWins, setYellowWins] = useState(0);
+  const [timer, setTimer] = useState(30); // 30 seconds per turn
+  const [moveHistory, setMoveHistory] = useState([]); // Stores all moves
+  const [currentMoveIndex, setCurrentMoveIndex] = useState(-1); // For move navigation
 
+  // Timer logic
+  useEffect(() => {
+    if (winner || isDropping) return;
 
-  
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev === 1) {
+          // If time runs out, switch turns
+          setTurn(!turn);
+          return 30;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [turn, winner, isDropping]);
+
   const checkWinner = useCallback((board, row, col, color) => {
     const directions = [
       [1, 0],  // vertical
@@ -47,7 +68,7 @@ function App() {
   }, [setBoard]);
 
   const handleColClick = useCallback(async (colIndex) => {
-    if (isDropping) return;
+    if (isDropping || winner) return;
 
     setIsDropping(true);
     const newBoard = board.map(row => [...row]);
@@ -56,12 +77,16 @@ function App() {
       if (newBoard[row][colIndex] === null) {
         const color = turn ? 'red' : 'yellow';
 
-        await simulateDrop(newBoard, colIndex, row, color);
+        // Save move to history
+        setMoveHistory((prev) => [...prev, { board: newBoard, turn, colIndex }]);
+
         newBoard[row][colIndex] = color;
         setBoard(newBoard);
 
         if (checkWinner(newBoard, row, colIndex, color)) {
           setWinner(color);
+          if (color === 'red') setRedWins((prev) => prev + 1);
+          else setYellowWins((prev) => prev + 1);
         } else {
           setTurn(!turn);
         }
@@ -70,8 +95,9 @@ function App() {
       }
     }
 
+    setTimer(30); // Reset timer for the next turn
     setIsDropping(false);
-  }, [board, winner, isDropping, turn, simulateDrop, checkWinner]);
+  }, [board, turn, winner, isDropping]);
 
   function countCells(board, row, col, dx, dy, color, cellCount) {
     let count = 0;
@@ -94,7 +120,6 @@ function App() {
     });
   }
 
-  // Devuelve la fila en la que caería la ficha en la columna indicada
   function getDropRow(colIndex) {
     for (let row = board.length - 1; row >= 0; row--) {
       if (board[row][colIndex] === null) {
@@ -104,9 +129,7 @@ function App() {
     return null;
   }
 
-  // Genera el contenido del tablero
   function generateBoard() {
-    // If a winner is found, return the board as it is without hover or drop effects
     if (winner) {
       return board.map((row, rowIndex) => (
         <tr key={rowIndex}>
@@ -119,26 +142,25 @@ function App() {
         </tr>
       ));
     }
-  
-    // Otherwise, continue with hover and drop effects
+
     const dropRowByCol = hoverCol !== null ? getDropRow(hoverCol) : null;
-  
+
     return board.map((row, rowIndex) => (
       <tr key={rowIndex}>
         {row.map((cell, colIndex) => {
           const isHoverCol = hoverCol === colIndex;
           const isDropCell = isHoverCol && rowIndex === dropRowByCol;
-  
+
           const cellColorClass = cell || '';
           const hoverClass = isHoverCol ? 'highlight-column' : '';
           const dropClass = isDropCell ? `highlight-drop ghost-${turn ? 'red' : 'yellow'}` : '';
-  
+
           return (
             <td
               key={colIndex}
               className={`cell ${cellColorClass} ${hoverClass} ${dropClass}`}
               onClick={() => handleColClick(colIndex)}
-              onMouseEnter={() => setHoverCol(colIndex) }
+              onMouseEnter={() => setHoverCol(colIndex)}
               onMouseLeave={() => setHoverCol(null)}
             ></td>
           );
@@ -173,40 +195,74 @@ function App() {
     );
   }
 
+  const replayLastMove = () => {
+    if (moveHistory.length === 0) {
+      alert('No moves to replay!');
+      return;
+    }
+    const confirmReplay = window.confirm('Do you want to replay the last move?');
+    if (confirmReplay) {
+      const lastMove = moveHistory[moveHistory.length - 1];
+      setBoard(lastMove.board);
+      setTurn(lastMove.turn);
+    }
+  };
+
+  const navigateMoves = (direction) => {
+    if (direction === 'first') setCurrentMoveIndex(0);
+    if (direction === 'last') setCurrentMoveIndex(moveHistory.length - 1);
+    if (direction === 'next' && currentMoveIndex < moveHistory.length - 1)
+      setCurrentMoveIndex((prev) => prev + 1);
+    if (direction === 'prev' && currentMoveIndex > 0)
+      setCurrentMoveIndex((prev) => prev - 1);
+
+    if (currentMoveIndex >= 0 && currentMoveIndex < moveHistory.length) {
+      const move = moveHistory[currentMoveIndex];
+      setBoard(move.board);
+      setTurn(move.turn);
+    }
+  };
+
+  const startNewGame = () => {
+    setBoard(createBoard());
+    setTurn(true);
+    setWinner(null);
+    setTimer(30);
+    setMoveHistory([]);
+    setCurrentMoveIndex(-1);
+  };
+
   return (
-    <div
-      className="App"
-      tabIndex={0}
-      onKeyDown={handleKeyDown}
-    >
-      {generateInvisibleButtons()}
-      <table className="connect4-board">
-        <tbody>
-          {generateBoard()}
-        </tbody>
-      </table>
-      <div className="title">
-        {winner ? (
-          <>
-            <h1 style={{ color: turn ? 'red' : 'yellow' }}>
-              ¡Ganó el jugador {turn ? "ROJO" : "AMARILLO"}!
-            </h1>
-            <input
-              type="button"
-              value="Reiniciar"
-              onClick={() => {
-                setBoard(createBoard());
-                setTurn(true);
-                setWinner(null);
-              }}
-              className="restart-button"
-            />
-          </>
-        ) : (
-          <h1 style={{ color: turn ? 'red' : 'yellow' }}>
-            Es el turno del jugador {turn ? "ROJO" : "AMARILLO"}
-          </h1>
-        )}
+    <div className="App" tabIndex={0} onKeyDown={handleKeyDown}>
+      <div className="game-container">
+        <div className="board-container">
+          {generateInvisibleButtons()}
+          <table className="connect4-board">
+            <tbody>{generateBoard()}</tbody>
+          </table>
+        </div>
+        <div className="control-panel">
+          <div className="player-info">
+            <div className="player red">
+              <span className="player-name">🔴 Red</span>
+              <span className="player-timer">{turn ? timer : '-'}</span>
+              <span className="player-wins">🏆 {redWins}</span>
+            </div>
+            <div className="player yellow">
+              <span className="player-name">🟡 Yellow</span>
+              <span className="player-timer">{!turn ? timer : '-'}</span>
+              <span className="player-wins">🏆 {yellowWins}</span>
+            </div>
+          </div>
+          <div className="game-controls">
+            <button onClick={() => navigateMoves('first')} title="First Move">⏮️</button>
+            <button onClick={() => navigateMoves('prev')} title="Previous Move">◀️</button>
+            <button onClick={() => navigateMoves('next')} title="Next Move">▶️</button>
+            <button onClick={() => navigateMoves('last')} title="Last Move">⏭️</button>
+            <button onClick={replayLastMove} title="Replay Last Move">🔄</button>
+            <button onClick={startNewGame} title="New Game">🆕</button>
+          </div>
+        </div>
       </div>
     </div>
   );
