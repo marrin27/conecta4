@@ -232,6 +232,12 @@ function App() {
     setCurrentMoveIndex(-1);
   };
 
+  function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  }
+
   return (
     <div className="App" tabIndex={0} onKeyDown={handleKeyDown}>
       <div className="game-container">
@@ -243,14 +249,15 @@ function App() {
         </div>
         <div className="control-panel">
           <div className="player-info">
-            <div className="player red">
+            <div className={`player red ${turn ? 'active' : ''}`}>
               <span className="player-name">🔴 Red</span>
-              <span className="player-timer">{turn ? timer : '-'}</span>
+              <span className="player-timer">{turn ? formatTime(timer) : '-'}</span>
               <span className="player-wins">🏆 {redWins}</span>
             </div>
-            <div className="player yellow">
+            <hr /> {/* Horizontal separator */}
+            <div className={`player yellow ${!turn ? 'active' : ''}`}>
               <span className="player-name">🟡 Yellow</span>
-              <span className="player-timer">{!turn ? timer : '-'}</span>
+              <span className="player-timer">{!turn ? formatTime(timer) : '-'}</span>
               <span className="player-wins">🏆 {yellowWins}</span>
             </div>
           </div>
