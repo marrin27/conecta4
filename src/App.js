@@ -100,7 +100,7 @@ function App() {
 
     setTimer(30); // Reset timer for the next turn
     setIsDropping(false);
-  }, [board, turn, winner, isDropping, simulateDrop]);
+  }, [checkWinner,board, turn, winner, isDropping, simulateDrop]);
 
   function countCells(board, row, col, dx, dy, color, cellCount) {
     let count = 0;
