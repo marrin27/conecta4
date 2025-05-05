@@ -216,7 +216,6 @@ h1 {
 
 .player .player-timer.danger {
   color: red; /* Red color for danger */
-  font-weight: bold; /* Make it bold */
   animation: blink 1s infinite; /* Blinking effect */
 }
 
