@@ -251,13 +251,17 @@ function App() {
           <div className="player-info">
             <div className={`player red ${turn ? 'active' : ''}`}>
               <span className="player-name">🔴 Red</span>
-              <span className="player-timer">{turn ? formatTime(timer) : '-'}</span>
+              <span className={`player-timer ${turn && timer <= 10 ? 'danger' : ''}`}>
+                {turn ? formatTime(timer) : '-'}
+              </span>
               <span className="player-wins">🏆 {redWins}</span>
             </div>
             <hr /> {/* Horizontal separator */}
             <div className={`player yellow ${!turn ? 'active' : ''}`}>
               <span className="player-name">🟡 Yellow</span>
-              <span className="player-timer">{!turn ? formatTime(timer) : '-'}</span>
+              <span className={`player-timer ${!turn && timer <= 10 ? 'danger' : ''}`}>
+                {!turn ? formatTime(timer) : '-'}
+              </span>
               <span className="player-wins">🏆 {yellowWins}</span>
             </div>
           </div>

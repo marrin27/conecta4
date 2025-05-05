@@ -182,7 +182,6 @@ h1 {
   gap: 10px;
 }
 
-
 .player-info::after {
   content: none; /* Remove the vertical separator */
 }
@@ -213,4 +212,19 @@ h1 {
   background-color: rgba(135, 206, 235, 0.5); /* Transparent blue with gray tone */
   cursor: not-allowed; /* Change cursor to indicate disabled state */
   color: #d3d3d3; /* Light gray text for readability */
+}
+
+.player .player-timer.danger {
+  color: red; /* Red color for danger */
+  font-weight: bold; /* Make it bold */
+  animation: blink 1s infinite; /* Blinking effect */
+}
+
+@keyframes blink {
+  0%, 100% {
+    text-shadow: 0 0 10px red;
+  }
+  50% {
+    text-shadow: 0 0 20px red;
+  }
 }
