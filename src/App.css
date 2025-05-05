@@ -98,7 +98,7 @@ h1 {
 
 .connect4-board .cell.red::after,
 .connect4-board .cell.yellow::after {
-  animation: drop 0.045s ease-out; /* Reapply the drop animation */
+  animation: drop 0.045s ease-out; /* Apply the drop animation */
 }
 
 .connect4-board .cell.ghost-red::after {
@@ -224,16 +224,8 @@ h1 {
     text-shadow: 0 0 10px red;
   }
   50% {
-    text-shadow: 0 0 20px red;
-  }
-}
+    text-shadow: 0 0 20px red}
 
-/* New animation for dropping effect */
-@keyframes drop {
-  from {
-    transform: translateY(-100%);
   }
-  to {
-    transform: translateY(0);
-  }
-}
+
+

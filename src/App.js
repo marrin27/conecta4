@@ -59,11 +59,11 @@ function App() {
 
   const simulateDrop = useCallback(async (board, colIndex, targetRow, color) => {
     for (let dropRow = 0; dropRow <= targetRow; dropRow++) {
-      const tempBoard = board.map(r => [...r]);
-      tempBoard[dropRow][colIndex] = color;
-      if (dropRow > 0) tempBoard[dropRow - 1][colIndex] = null;
-      setBoard(tempBoard);
-      await new Promise(resolve => setTimeout(resolve, 45));
+      const tempBoard = board.map(r => [...r]); // Clone the board
+      tempBoard[dropRow][colIndex] = color; // Set the current drop position
+      if (dropRow > 0) tempBoard[dropRow - 1][colIndex] = null; // Clear the previous position
+      setBoard(tempBoard); // Update the board state
+      await new Promise(resolve => setTimeout(resolve, 45)); // Add a delay for the animation
     }
   }, [setBoard]);
 
@@ -76,6 +76,9 @@ function App() {
     for (let row = board.length - 1; row >= 0; row--) {
       if (newBoard[row][colIndex] === null) {
         const color = turn ? 'red' : 'yellow';
+
+        // Simulate the drop animation
+        await simulateDrop(newBoard, colIndex, row, color);
 
         // Save move to history
         setMoveHistory((prev) => [...prev, { board: newBoard, turn, colIndex }]);
@@ -97,7 +100,7 @@ function App() {
 
     setTimer(30); // Reset timer for the next turn
     setIsDropping(false);
-  }, [board, turn, winner, isDropping]);
+  }, [board, turn, winner, isDropping, simulateDrop]);
 
   function countCells(board, row, col, dx, dy, color, cellCount) {
     let count = 0;
