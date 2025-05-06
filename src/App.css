@@ -2,6 +2,11 @@
   text-align: center;
 }
 
+.App:focus {
+  outline: none; /* Remove the default focus outline */
+  border: none; /* Ensure no border is added */
+}
+
 h1 {
   color: #282c34;
   margin-bottom: 20px;
@@ -85,6 +90,7 @@ h1 {
 .connect4-board .cell.yellow.winner::after {
   box-shadow: #f2a007 0 0 20px 20px; 
 }
+
 
 /* New animation for dropping effect */
 @keyframes drop {
@@ -225,7 +231,10 @@ h1 {
   }
   50% {
     text-shadow: 0 0 20px red}
+}
 
-  }
+.player.winner {
+  box-shadow: 0 0 15px #f2a007, 0 0 30px #f2a007; /* Stronger text shadow for the winner */
+}
 
 

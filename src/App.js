@@ -83,7 +83,7 @@ function App() {
         // Save move to history
         setMoveHistory((prev) => [...prev, { board: newBoard, turn, colIndex }]);
 
-        newBoard[row][colIndex] = color;
+        newBoard[row][colIndex] = color; // Set the dropped piece
         setBoard(newBoard);
 
         if (checkWinner(newBoard, row, colIndex, color)) {
@@ -100,7 +100,7 @@ function App() {
 
     setTimer(30); // Reset timer for the next turn
     setIsDropping(false);
-  }, [checkWinner,board, turn, winner, isDropping, simulateDrop]);
+  }, [checkWinner, board, turn, winner, isDropping, simulateDrop]);
 
   function countCells(board, row, col, dx, dy, color, cellCount) {
     let count = 0;
@@ -252,7 +252,7 @@ function App() {
         </div>
         <div className="control-panel">
           <div className="player-info">
-            <div className={`player red ${turn ? 'active' : ''}`}>
+            <div className={`player red ${turn ? 'active' : ''} ${winner === 'red' ? 'winner' : ''}`}>
               <span className="player-name">🔴 Red</span>
               <span className={`player-timer ${turn && timer <= 10 ? 'danger' : ''}`}>
                 {turn ? formatTime(timer) : '-'}
@@ -260,7 +260,7 @@ function App() {
               <span className="player-wins">🏆 {redWins}</span>
             </div>
             <hr /> {/* Horizontal separator */}
-            <div className={`player yellow ${!turn ? 'active' : ''}`}>
+            <div className={`player yellow ${!turn ? 'active' : ''} ${winner === 'yellow' ? 'winner' : ''}`}>
               <span className="player-name">🟡 Yellow</span>
               <span className={`player-timer ${!turn && timer <= 10 ? 'danger' : ''}`}>
                 {!turn ? formatTime(timer) : '-'}
